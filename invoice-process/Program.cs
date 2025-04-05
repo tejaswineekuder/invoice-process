@@ -11,6 +11,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IThirdParty,ThirdPartyService>();
 builder.Services.AddScoped<IMocker,MockerService>();
+builder.Services.AddScoped<IDecisionMaker, DecisionMakerService>();
 
 var app = builder.Build();
 

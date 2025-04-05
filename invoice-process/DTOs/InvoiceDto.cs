@@ -2,7 +2,7 @@
 
 namespace invoice_process.DTOs
 {
-    public class InvoiceDto 
+    public class InvoiceDto : InvoiceClassificationDto
     {
         [JsonProperty("invoiceId")]
         public string? InvoiceId { get; set; }

@@ -1,0 +1,24 @@
+{
+  "rules": [
+    {
+      "ruleId": 1,
+      "condition": "Amount < 1000 AND RiskLevel == 'Low'",
+      "action": "Approve"
+    },
+    {
+      "ruleId": 2,
+      "condition": "Classification == 'FireDamagedWallRepair' AND RiskLevel == 'High'",
+      "action": "Flag for Review"
+    },
+    {
+      "ruleId": 3,
+      "condition": "Amount > 1000 AND RiskLevel == 'High",
+      "action": "Flag for Review"
+    },
+    {
+      "ruleId": 4,
+      "condition": "Amount == 100 AND RiskLevel == 'High",
+      "action": "Approve"
+    }
+  ]
+}
