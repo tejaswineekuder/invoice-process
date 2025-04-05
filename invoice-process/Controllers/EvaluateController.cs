@@ -4,6 +4,7 @@ using invoice_process.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Text;
 
 namespace invoice_process.Controllers
 {
@@ -14,12 +15,14 @@ namespace invoice_process.Controllers
         private readonly ILogger<EvaluateController> _logger;
         private readonly IThirdParty _thirdParty;
         private readonly IDecisionMaker _decisionMaker;
+        private readonly IEvaluate _evaluate;
 
-        public EvaluateController(ILogger<EvaluateController> logger, IThirdParty thirdParty, IDecisionMaker decisionMaker)
+        public EvaluateController(ILogger<EvaluateController> logger, IThirdParty thirdParty, IDecisionMaker decisionMaker, IEvaluate evaluate)
         {
             _logger = logger;
             _thirdParty = thirdParty;
             _decisionMaker = decisionMaker;
+            _evaluate = evaluate;
         }
 
         [HttpPost("evaluate")]
@@ -67,8 +70,29 @@ namespace invoice_process.Controllers
             var action = _decisionMaker.GetAction(invoice);
             _logger.LogInformation("Decision rule processing action : " + action);
 
+            //get the evaluation summary
+            var evaluationSummary = await _evaluate.InvoiceEvaluation(invoice);
+            if (evaluationSummary == null)
+            {
+                return BadRequest("Failed to get evaluation summary.");
+            }
+            evaluationSummary.RulesApplied = action;
+            //write evaluation summary to a text document 
+            // Convert text to byte array
+            byte[] fileBytes = Encoding.UTF8.GetBytes(evaluationSummary.EvaluationSummary);
 
-            return Ok(new {Classification = classification, Action = action });
+            // Convert file contents to Base64 string
+            evaluationSummary.EvaluationTextFile = Convert.ToBase64String(fileBytes);
+
+            _logger.LogInformation("Invoice evaluation summary : " + JsonConvert.SerializeObject(evaluationSummary));
+
+
+            // Return both attachment & summary
+            return Ok(new
+            {
+                EvaluationSummary = evaluationSummary,
+                //FileDownload = File(fileBytes, "application/octet-stream", "summary.txt")
+            });
         }
     }
 }

@@ -12,6 +12,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IThirdParty,ThirdPartyService>();
 builder.Services.AddScoped<IMocker,MockerService>();
 builder.Services.AddScoped<IDecisionMaker, DecisionMakerService>();
+builder.Services.AddScoped<IEvaluate, EvaluateService>();
 
 var app = builder.Build();
 
