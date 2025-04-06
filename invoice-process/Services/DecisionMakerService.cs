@@ -8,6 +8,11 @@ namespace invoice_process.Services
     public class DecisionMakerService : IDecisionMaker
     {
         private readonly ILogger<DecisionMakerService> _logger;
+        public DecisionMakerService(ILogger<DecisionMakerService> logger)
+        {
+            _logger = logger;
+        }
+
         public string GetAction(InvoiceDto invoice)
         {
             var rules = LoadJson();
