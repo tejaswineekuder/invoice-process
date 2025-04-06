@@ -22,7 +22,6 @@ bash
 Copy
 Edit
 dotnet run
-The API will be accessible at https://localhost:5001 or http://localhost:5000.
 
 Features
 Evaluate invoices based on predefined rules
